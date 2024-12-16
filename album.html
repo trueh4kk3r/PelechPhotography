@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Album</title>
+    <link rel="stylesheet" href="connors_website.css">
+</head>
+
+<body>
+    <header>
+        <div class="logo">My Photography</div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="album.html">Album</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="album" class="section">
+        <h1>Album</h1>
+        <div class="gallery" id="albumGallery">
+            <!-- Previous images will be loaded here -->
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 My Photography. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const albumGallery = document.getElementById('albumGallery');
+            const previousImages = JSON.parse(localStorage.getItem('previousImages')) || [];
+
+            if (previousImages.length > 0) {
+                previousImages.forEach(src => {
+                    const img = document.createElement('img');
+                    img.src = src;
+                    img.alt = "Previous Upload";
+                    img.style.border = "2px solid #ddd";
+                    img.style.borderRadius = "5px";
+                    img.style.maxWidth = "200px";
+                    img.style.margin = "10px";
+                    albumGallery.appendChild(img);
+                });
+            } else {
+                const noImages = document.createElement('p');
+                noImages.textContent = "No images available yet.";
+                albumGallery.appendChild(noImages);
+            }
+        });
+
+        // Listen for changes to localStorage and update the album
+        window.addEventListener('storage', function (event) {
+            if (event.key === 'uploadedImages') {
+                handleStorageUpdate();
+            }
+        });
+
+        function handleStorageUpdate() {
+            const albumGallery = document.getElementById('albumGallery');
+            albumGallery.innerHTML = ''; // Clear existing content
+
+            const uploadedImages = JSON.parse(localStorage.getItem('uploadedImages')) || [];
+            const previousImages = JSON.parse(localStorage.getItem('previousImages')) || [];
+
+            // Limit uploaded images to 8
+            if (uploadedImages.length > 8) {
+                const overflow = uploadedImages.length - 8;
+                const movedImages = uploadedImages.splice(0, overflow);
+
+                // Move old images to previousImages
+                previousImages.push(...movedImages);
+                localStorage.setItem('uploadedImages', JSON.stringify(uploadedImages));
+                localStorage.setItem('previousImages', JSON.stringify(previousImages));
+            }
+
+            // Display previous images
+            previousImages.forEach(src => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.alt = "Previous Upload";
+                img.style.border = "2px solid #ddd";
+                img.style.borderRadius = "5px";
+                img.style.maxWidth = "200px";
+                img.style.margin = "10px";
+                albumGallery.appendChild(img);
+            });
+        }
+
+        // Ensure album is synced on page load
+        handleStorageUpdate();
+    </script>
+</body>
+
+</html>

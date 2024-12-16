@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photography Portfolio</title>
+    <link rel="stylesheet" href="connors_website.css">
+</head>
+
+<body>
+    <header>
+        <div class="logo">My Photography</div>
+        <nav>
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#portfolio">Portfolio</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="album.html">Album</a></li>
+
+            </ul>
+        </nav>
+    </header>
+
+    <section id="about" class="section">
+        <h1>About Me</h1>
+        <p>Blah blah my name is Pelech Blah blah - photos photos photos</p>
+    </section>
+
+    <section id="portfolio" class="section">
+        <h1>Portfolio</h1>
+        <div class="gallery" id="gallery">
+            <img src="photo1.jpg" alt="Sample Photo 1" class="sample-image">
+            <img src="photo2.jpg" alt="Sample Photo 2" class="sample-image">
+            <img src="photo3.jpg" alt="Sample Photo 3" class="sample-image">
+            <img src="photo4.jpg" alt="Sample Photo 4" class="sample-image">
+        </div>
+        <form id="uploadForm">
+            <label for="imageUpload">Upload an Image:</label>
+            <input type="file" id="imageUpload" name="imageUpload" accept="image/*" required>
+            <button type="submit">Upload</button>
+        </form>
+        <div id="uploadedImages" class="uploaded-section"></div>
+    </section>
+
+    <section id="contact" class="section">
+        <h1>Contact Me</h1>
+        <form id="contactForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" required></textarea>
+
+            <button type="submit">Send</button>
+        </form>
+        <p id="responseMessage"></p>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 My Photography. All rights reserved.</p>
+    </footer>
+
+    <script src="connors_website.js"></script>
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const fileInput = document.getElementById('imageUpload');
+            const file = fileInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const gallery = document.getElementById('gallery');
+                    const imageContainer = document.createElement('div');
+                    imageContainer.style.display = 'inline-block';
+                    imageContainer.style.margin = '10px';
+                    imageContainer.style.textAlign = 'center';
+
+                    const newImage = document.createElement('img');
+                    newImage.src = e.target.result;
+                    newImage.alt = "Uploaded Image";
+                    newImage.style.border = "2px solid #ddd";
+                    newImage.style.borderRadius = "5px";
+                    newImage.style.maxWidth = "200px";
+                    newImage.style.display = "block";
+                    newImage.style.marginBottom = "5px";
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = "Delete";
+                    deleteButton.style.display = "block";
+                    deleteButton.style.margin = "0 auto";
+                    deleteButton.addEventListener('click', function () {
+                        gallery.removeChild(imageContainer);
+                    });
+
+                    imageContainer.appendChild(newImage);
+                    imageContainer.appendChild(deleteButton);
+                    gallery.appendChild(imageContainer);
+                };
+                reader.readAsDataURL(file);
+
+                fileInput.value = ""; // Clear the file input after uploading
+            }
+        });
+    </script>
+</body>
+
+</html>
